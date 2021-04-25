@@ -1,0 +1,5 @@
+requests
+json
+boto3
+apscheduler
+flask-lambda-python36

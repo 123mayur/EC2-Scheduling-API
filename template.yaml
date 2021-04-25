@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Myschedule
+
+  Sample SAM Template for Myschedule
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+
+  MyscheduleFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: scheduling/
+      Handler: app.app
+      Runtime: python3.8
+
+      Events:
+        Test:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /hello
+            Method: get
+        ListSchedule:
+          Type: Api
+          Properties:
+            Path: /getjob
+            Method: get
+        PutSchedule:
+          Type: Api
+          Properties:
+            Path: /create
+            Method: post
+        GetSchedule:
+          Type: Api
+          Properties:
+            Path: /getjob/{job_Id}/
+            Method: get
+        PatchSchedule:
+          Type: Api
+          Properties:
+            Path: /update/{job_Id}/
+            Method: patch
+        DeleteSchedule:
+          Type: Api
+          Properties:
+            Path: /deletejob/{job_Id}/
+            Method: delete
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  MyscheduleApi:
+    Description: "API Gateway endpoint URL for Prod stage for Schedule function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+  MyscheduleFunction:
+    Description: "Schedule Lambda Function ARN"
+    Value: !GetAtt MyscheduleFunction.Arn
+  MyscheduleFunctionIamRole:
+    Description: "Implicit IAM Role created for Schedule function"
+    Value: !GetAtt MyscheduleFunctionRole.Arn
